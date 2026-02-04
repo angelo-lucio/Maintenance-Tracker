@@ -20,3 +20,8 @@ func printMenu() {
 func printContinue() {
 	fmt.Println("\nDrücke Enter um fortzufahren")
 }
+
+func printAddVehicle() {
+	fmt.Println(`Um ein Fahrzeug aufzunehmen sind folgende Angaben benötigt:
+Marke, Modell, Code, Farbe, Typ, Kraftstoff, Jahrgang, Laufleistung, RacingOnly`)
+}

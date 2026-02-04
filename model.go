@@ -1,9 +1,9 @@
 package main
 
 type Vehicle struct {
-	Brand, Model, Code, Color, Type string
-	Year, Mileage                   int
-	OnlyForRacing                   bool
+	Brand, Model, Code, Color, Type, Fuel string
+	Year, Mileage                         int
+	OnlyForRacing                         bool
 }
 
 var vehicles []Vehicle
