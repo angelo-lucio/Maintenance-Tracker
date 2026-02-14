@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func askForCommand() string {
@@ -32,7 +33,7 @@ func parseCommand(input string) {
 		clearTerminal()
 		printAddVehicle()
 		response := askForCommand()
-		vehicle := createVehichle(response)
+		vehicle := createVehicle(response)
 		addVehicle(vehicle)
 		clearTerminal()
 		printMenu()
@@ -56,22 +57,28 @@ func clearTerminal() {
 	cmd.Run()
 }
 
-func createVehichle(response string) Vehicle {
+func createVehicle(response string) Vehicle {
 	clean := strings.ReplaceAll(response, ", ", ",")
 	parts := strings.Split(clean, ",")
-	Year, _ := strconv.Atoi(parts[6])
-	mileage, _ := strconv.Atoi(parts[7])
+	YearLayout := "1.01.1900"
+	Year, err := time.Parse(YearLayout, parts[6])
+	if err != nil {
+		wrongSintax()
+	}
+	mileage, err := strconv.Atoi(parts[7])
+	if err != nil {
+		wrongSintax()
+	}
 
 	return Vehicle{
-		Brand:         parts[0],
-		Model:         parts[1],
-		Code:          parts[2],
-		Color:         parts[3],
-		Type:          parts[4],
-		Fuel:          parts[5],
-		Year:          Year,
-		Mileage:       mileage,
-		OnlyForRacing: bool(parts[8] == "1"),
+		Brand:     parts[0],
+		Model:     parts[1],
+		MotorCode: parts[2],
+		Color:     parts[3],
+		Type:      parts[4],
+		Fuel:      parts[5],
+		Year:      Year,
+		Mileage:   mileage,
 	}
 
 }

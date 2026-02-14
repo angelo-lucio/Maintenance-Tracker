@@ -25,3 +25,7 @@ func printAddVehicle() {
 	fmt.Println(`Um ein Fahrzeug aufzunehmen sind folgende Angaben benötigt:
 Marke, Modell, Code, Farbe, Typ, Kraftstoff, Jahrgang, Laufleistung, RacingOnly`)
 }
+
+func wrongSintax() {
+	fmt.Printf(`This input isn't allowed:`)
+}
