@@ -19,16 +19,63 @@ func askForCommand() string {
 func parseCommand(input string) {
 	switch {
 	case input == "q":
+		printGoodbye()
 		os.Exit(0)
 	case input == "1":
 		clearTerminal()
-		garage()
+		allVehicles := garage()
+		printGarage(allVehicles)
 		printContinue()
-		executeCommand()
+		askForCommand()
 		clearTerminal()
 		printMenu()
 	case input == "2":
 		clearTerminal()
+		printGarage(garage())
+		printSelectToErase()
+		askForCommand()
+		eraseVehicle()
+		printContinue()
+		askForCommand()
+		clearTerminal()
+		printMenu()
+	case input == "3":
+		clearTerminal()
+		printGarage(garage())
+		printSelectToStatus()
+		response := askForCommand()
+		index, err := strconv.Atoi(response)
+		if err != nil {
+			wrongSintax()
+		}
+		if index < 1 || index > len(vehicles) {
+			wrongSintax()
+		}
+		printVehicleStatus(vehicles[index-1])
+		printContinue()
+		askForCommand()
+		clearTerminal()
+		printMenu()
+	case input == "4":
+		clearTerminal()
+		printGarage(garage())
+		printAddInspection()
+		response := askForCommand()
+		addWork(response, garage())
+		printContinue()
+		askForCommand()
+		clearTerminal()
+		printMenu()
+	case input == "5":
+		clearTerminal()
+		printGarage(garage())
+		printAddWork()
+		response := askForCommand()
+		addWork(response, garage())
+		printContinue()
+		askForCommand()
+		clearTerminal()
+		printMenu()
 	case input == "6":
 		clearTerminal()
 		printAddVehicle()
@@ -81,4 +128,66 @@ func createVehicle(response string) Vehicle {
 		Mileage:   mileage,
 	}
 
+}
+
+func eraseVehicle() {
+	response := askForCommand()
+	index, err := strconv.Atoi(response)
+	if err != nil {
+		wrongSintax()
+	}
+	if index < 1 || index > len(vehicles) {
+		wrongSintax()
+	}
+	vehicles = append(vehicles[:index-1], vehicles[index:]...)
+	clearTerminal()
+	printMenu()
+}
+
+func addWork(response string, garage []Vehicle) {
+	clean := strings.ReplaceAll(response, ", ", ",")
+	parts := strings.Split(clean, ",")
+	// index is the first part of the input, which is used to identify the vehicle to which the work should be added
+	index, err := strconv.Atoi(parts[0])
+	if err != nil || index < 1 || index > len(garage) {
+		wrongSintax()
+		return
+	}
+
+	// mileage parsed from the input, which is used to identify the mileage at which the work was done
+	mileage, err := strconv.Atoi(parts[4])
+	if err != nil {
+		wrongSintax()
+		return
+	}
+
+	// costs parse
+	costs, err := strconv.ParseFloat(parts[5], 64)
+	if err != nil {
+		wrongSintax()
+		return
+	}
+
+	// partCosts parse
+	partCosts, err := strconv.ParseFloat(parts[6], 64)
+	if err != nil {
+		wrongSintax()
+		return
+	}
+
+	work := Maintenance{
+		Mileage: mileage,
+		Date:    time.Now(),
+		Costs:   costs,
+		Work: WorksDetail{
+			Category:    parts[1],
+			Description: parts[2],
+			Parts:       parts[3],
+			PartCosts:   partCosts,
+		},
+	}
+	// add the work to the corresponding vehicle in the garage
+	garage[index-1].Maintenance = append(garage[index-1].Maintenance, work)
+	// update the service interval of the vehicle to the current date
+	garage[index-1].ServiceInt = time.Now()
 }

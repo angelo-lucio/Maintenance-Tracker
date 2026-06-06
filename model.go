@@ -7,7 +7,9 @@ import (
 type Vehicle struct {
 	Brand, Model, MotorCode, Color, Type, Fuel, LicensePlate string
 	Mileage, Power                                           int
-	Year, ServiceInt                                         time.Time
+	ServiceInt, Year                                         time.Time
+	// Maintenance is a slice of Maintenance structs, which contains all the maintenance work that has been done on the vehicle
+	Maintenance []Maintenance
 }
 
 var vehicles []Vehicle
